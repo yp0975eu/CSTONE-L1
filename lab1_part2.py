@@ -72,4 +72,3 @@ if __name__ == '__main__':
     # if not valid, print error message
     else:
         print("not valid variable")
-
