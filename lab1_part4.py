@@ -64,8 +64,103 @@ def print_all_routes(route_json):
         print("{0} : {1}".format(str(route["Route"]).rjust(7), route["Description"]))
 
 
+def print_all_stops(route_json, direction):
+
+    print("\n\t{0}".format(direction["Text"]))
+    print("\tStop # : Description ")
+
+    for route in route_json:
+        print("\t{0} : {1}".format(str(route["Value"]).rjust(6), str(route["Text"]).ljust(34)))
+
+
+def get_route_directions(route_num):
+
+    data = get_json_data("http://svc.metrotransit.org/NexTrip/Directions/{0}".format(route_num))
+
+    route_directions_json = data.json()
+
+    return route_directions_json
+
+
+# for printing all stops, and stop times in an easy to read list in the console
+def print_all_stop_times(all_stop_times):
+
+    print("\n\n\tRoute {0} - {1}".format(
+        all_stop_times[0]["route"],
+        all_stop_times[0]["direction"]["Text"]
+        )
+    )
+
+    print("\t{0} : {1} : {2}".format(
+        "Stop ID".ljust(7),
+        "Description".ljust(32),
+        "Times".ljust(7)
+    ))
+
+    for stop in all_stop_times:
+        s = stop['stop']
+
+        stop_time_string = ''
+
+        for stop_times in s['stop_times']:
+            stop_time_string += " " + str(stop_times['DepartureText']).ljust(7)
+
+        print("\t{0} : {1} : {2}" .format(
+                str(s['stop_info']['Value']).ljust(7),
+                str(s['stop_info']['Text']).ljust(32),
+                str(stop_time_string).ljust(7)
+            )
+        )
+
+
+def get_stop_times(route, direction, stop_json):
+
+    # new data structure to hold a list of stops and their respective stop times
+    new_stop_json = []
+
+    # looping through and getting the stop node ids for the api call
+    for stop in stop_json:
+
+        data = get_json_data("http://svc.metrotransit.org/NexTrip/{0}/{1}/{2}".format(route, direction["Value"], stop["Value"]))
+
+        new_stop_json.append(
+            {
+                "route": route,
+                "direction": direction,
+                'stop': {
+                    "stop_info": stop,
+                    "stop_times": data.json()
+                }
+            }
+        )
+
+    return new_stop_json
+
+
 def get_select_route():
-    pass
+
+    route = input("""
+    Enter route
+    \n\t""")
+
+    # get route directions, needed for stop information
+    directions = get_route_directions(route)
+
+    for direction in directions:
+
+        data = get_json_data("http://svc.metrotransit.org/NexTrip/Stops/{0}/{1}".format(route, direction["Value"]))
+
+        route_info = data.json()
+
+        # route_info = [
+        #     {'Text': '66th St and Richfield Pkwy', 'Value': '6617'},
+        #     {'Text': 'Chicago Ave and 56th St', 'Value': '56CH'}
+        #     ...]
+        all_stop_times = get_stop_times(route, direction, route_info)
+
+        print_all_stop_times(all_stop_times)
+
+        # print_all_stops(route_info, direction)
 
 
 # used to display menu
@@ -101,11 +196,11 @@ if __name__ == "__main__":
             get_select_route()
 
         elif selection == '3':
-            print('goodbye')
+            print('\tgoodbye')
             exit()
 
         else:
-            print("default exit")
+            print("\tdefault exit")
             exit()
 
         selection = menu()
