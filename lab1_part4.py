@@ -10,6 +10,12 @@
 
 # Extra challenge: your program should cache data locally to avoid excessive requests.
 # If the user has made a request recently, your program should fetch the data from the cache instead of the website.
+
+
+# notes: api info from :  http://svc.metrotransit.org/
+# requests from : http://docs.python-requests.org/en/master/
+
+
 import requests
 
 
