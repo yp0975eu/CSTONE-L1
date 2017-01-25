@@ -10,6 +10,14 @@
 # Test your program, and comment your code.
 
 
+def display_banner():
+    message = "Awesome Camel Case Program"
+
+    stars = '*' * len(message)
+
+    print('\n', stars, '\n', message, '\n', stars, '\n')
+
+
 def camel_case_sentence(sentence):
     # lowercase all letters
     l_sentence = sentence.lower()
@@ -56,6 +64,9 @@ def test_if_valid_python_variable(variable):
     return True
 
 if __name__ == '__main__':
+
+    display_banner()
+
     # prompt user for sentence
 
     sentence = input("Enter a sentence to turn it into camel case:\n")
