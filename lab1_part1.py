@@ -11,34 +11,37 @@ def generate_number(u_limit):
     return random.randrange(u_limit)
 
 
-def get_input():
-    try_again = True
-    temp = None
-
-    while try_again:
+def get_input(range_max):
         try:
             # get a number from user, try to cast to int
-            temp = int(input("Please enter a number between 0 and " + str(r_max) + ":\n"))
+            guess = int(input("Please enter a number between 0 and " + str(range_max) + ":\n"))
             # if casting is successful, exit loop and return guess
-            try_again = False
+            if 0 < guess < range_max:
+                return guess
+            else:
+                return False
         except ValueError:
             # if the guess is not a number print error message and try again
             print("Was that a number?")
-            try_again = True
 
-    return temp
 
 if __name__ == '__main__':
 
     # change r_max to set upper limit of range
-    r_max = 10
+    range_max = 10
     target = None
     guess = None
+    guess_count = 0
 
-    target = generate_number(r_max)
-    guess = get_input()
+    target = generate_number(range_max)
+
+    while True:
+        guess = get_input(range_max)
+        if guess is int:
+            break
 
     while guess != target:
+        guess_count += 1
         if guess > target:
             print("Too high")
         else:
