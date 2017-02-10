@@ -20,16 +20,19 @@ class TestGenerateNumber(unittest.TestCase):
     def test_user_input(self, mock_print, mock_input):
         max = 10
 
-        # a
+        # mock_input = a
         lab1_part1.get_input(max)
         mock_print.assert_called_with("Was that a number?")
 
-        # 11
+        # mock_input = 11
         # if this is greater than max return false
         self.assertEqual(lab1_part1.get_input(max), False)
 
+        # mock_input = 1
         self.assertEqual(lab1_part1.get_input(max), 1)
 
+        # mock_input = -1
         self.assertEqual(lab1_part1.get_input(max), False)
 
+        # mock_input = 3.3
         self.assertEqual(lab1_part1.get_input(max), 3)
